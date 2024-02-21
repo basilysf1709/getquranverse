@@ -1,23 +1,22 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextRequest } from "next/server";
+import { PlayersData } from "@/types/types";
 import { cookies } from "next/headers";
 import { generateRandomString } from "@/utils/util_functions";
+import { NextRequest } from "next/server";
 
-export async function GET() {
+export async function POST(req: NextRequest) {
   try {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const gameSessionString = generateRandomString(6);
-    const playersData = {
-      player1: "Basil",
-    };
+    const { username } = await req.json();
+    const playersData : PlayersData= [{ username: username, score: 0 }]
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("game_sessions")
       .insert([{ game_id: gameSessionString, players: playersData }]);
-    console.log(data)
-    console.error(error)
-    return new Response(JSON.stringify({ message: "200" }), {
+
+    return new Response(JSON.stringify({ message: "Game session created!", data: data }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
