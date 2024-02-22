@@ -1,9 +1,12 @@
-import Image from "next/image";
+import { HostGame } from "@/components/HostGame";
+import { JoinGame } from "@/components/JoinGame";
 
 export default function Home() {
   return (
-    <main>
-      Hello
+    <main className="flex justify-center items-center flex-col h-screen">
+      <JoinGame />
+      <HostGame />
+      {/* <Loading /> */}
     </main>
   );
 }
