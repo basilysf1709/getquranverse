@@ -1,9 +1,14 @@
 "use client";
 
 import { Loading } from "@/components/Loading/Loading";
+import { useSearchParams } from 'next/navigation'
 import "./game.css"
 
 export default function Game() {
+  const searchParams = useSearchParams()
+  const game_id = searchParams.get('game_id')
+  console.log(game_id)
+
   const questions = [
     {
       "question": "What type of framework is Next.js?",

@@ -4,11 +4,18 @@ import { useEffect, useState } from "react";
 import { CiCircleCheck } from "react-icons/ci";
 import { supabase } from "@/utils/supabase/client";
 import { Loading } from "@/components/Loading/Loading";
+import { useRouter } from "next/navigation";
 
 export default function Lobby() {
+  const router = useRouter()
   const game_id: string = usePathname().replace(/^\//, "");
   const [participants, setParticipants] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const handleOnClick = (event: any) => {
+    event.preventDefault()
+    router.push(`/game?game_id=${game_id}`)
+  }
 
   const fetchPlayers = async () => {
     setIsLoading(true);
@@ -97,7 +104,7 @@ export default function Lobby() {
           ))}
         </ul>
       )}
-      <button className="w-7/12 m-4 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5">
+      <button onClick={handleOnClick} className="w-7/12 m-4 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5">
         Start Game
       </button>
     </div>
