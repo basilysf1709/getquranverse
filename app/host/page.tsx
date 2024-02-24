@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loading } from "@/components/Loading/Loading";
 import { useState } from "react";
 
@@ -23,7 +23,7 @@ export default function Host() {
     try {
       const username = event.target.username.value;
       const { gameId } = await hostGameSession(username);
-      router.push(`${gameId}`);
+      router.push(`${gameId}?isHost=true`);
     } catch (error) {
       console.error(
         "An error occurred while trying to create game session:",
@@ -59,12 +59,12 @@ export default function Host() {
               placeholder="Asfandyaar Talhat"
               required
             />
-            <button
+            {<button
               type="submit"
               className="w-full mt-5 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
               Create Game Session
-            </button>
+            </button>}
           </div>
         </form>
       )}

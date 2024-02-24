@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiCircleCheck } from "react-icons/ci";
 import { supabase } from "@/utils/supabase/client";
@@ -8,13 +8,23 @@ import { useRouter } from "next/navigation";
 
 export default function Lobby() {
   const router = useRouter()
+  const searchParams = useSearchParams();
+  const isHost = searchParams.get("isHost");
   const game_id: string = usePathname().replace(/^\//, "");
   const [participants, setParticipants] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const handleOnClick = (event: any) => {
+  const handleOnClick = async (event: any) => {
     event.preventDefault()
     router.push(`/game?game_id=${game_id}`)
+    const response = await fetch("/api/v1/startGame", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ game_id }),
+    });
+    await response.json();
   }
 
   const fetchPlayers = async () => {
@@ -48,8 +58,12 @@ export default function Lobby() {
   useEffect(() => {
     fetchPlayers();
     const handleUpdates = (payload: any) => {
-      fetchPlayers();
-      console.log("Table Updated!", payload);
+      console.log(payload)
+      if(payload?.new?.game_started === true) {
+        router.push(`/game?game_id=${game_id}`)
+      } else {
+        fetchPlayers();
+      }
     };
     const channel = supabase
       .channel("game_sessions")
@@ -104,9 +118,9 @@ export default function Lobby() {
           ))}
         </ul>
       )}
-      <button onClick={handleOnClick} className="w-7/12 m-4 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5">
+      {isHost ? (<button onClick={handleOnClick} className="w-7/12 m-4 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5">
         Start Game
-      </button>
+      </button>) : <></>}
     </div>
   );
 }
