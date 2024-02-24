@@ -1,15 +1,37 @@
-'use client'
+"use client";
 import { useRouter } from "next/navigation";
 
 export default function Host() {
   const router = useRouter();
-  const handleSubmit = (event: any) => {
+  const hostGameSession = async (username: string) => {
+    const response = await fetch("/api/v1/createGameSession", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username }),
+    });
+    return response.json();
+  };
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    router.push("/lobby");
+    try {
+      const username = event.target.username.value;
+      const {gameId} = await hostGameSession(username);
+      router.push(`${gameId}`);
+    } catch (error) {
+      console.error(
+        "An error occurred while trying to join game session:",
+        error
+      );
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex justify-center items-center flex-col h-screen w-screen">
+    <form
+      onSubmit={handleSubmit}
+      className="flex justify-center items-center flex-col h-screen w-screen"
+    >
       <div className="mb-5 w-3/4">
         <label
           htmlFor="username"

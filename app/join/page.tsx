@@ -4,9 +4,29 @@ import { useRouter } from "next/navigation";
 
 export default function Join() {
   const router = useRouter()
-  const handleSubmit = (event: any) => {
-    event.preventDefault(); 
-    router.push("/lobby");
+  const joinGameSession = async (username: string, game_id: string) => {
+    const response = await fetch("/api/v1/joinGameSession", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, game_id }),
+    });
+    return response.json();
+  };
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    try {
+      const username = event.target.username.value;
+      const game_id = event.target.game_id.value;
+      const res = await joinGameSession(username, game_id);
+      router.push(game_id);
+    } catch (error) {
+      console.error(
+        "An error occurred while trying to join game session:",
+        error
+      );
+    }
   };
   return (
     <form onSubmit={handleSubmit} className="flex justify-center items-center flex-col h-screen w-screen">
@@ -31,8 +51,8 @@ export default function Join() {
           Game ID
         </label>
         <input
-          type="id"
-          id="id"
+          type="game_id"
+          id="game_id"
           className="w-full shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block p-2.5"
           placeholder="Game ID..."
           required
