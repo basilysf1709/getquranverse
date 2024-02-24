@@ -21,7 +21,7 @@ export default function Host() {
       router.push(`${gameId}`);
     } catch (error) {
       console.error(
-        "An error occurred while trying to join game session:",
+        "An error occurred while trying to create game session:",
         error
       );
     }

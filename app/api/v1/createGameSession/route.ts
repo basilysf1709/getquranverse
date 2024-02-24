@@ -10,11 +10,11 @@ export async function POST(req: NextRequest) {
     const supabase = createClient(cookieStore);
     const gameSessionString = generateRandomString(6);
     const { username } = await req.json();
-    const playersData : PlayersData = [{ username: username, score: 0 }]
+    const playersData : PlayersData = [{ username: username, score: 0, isHost: true }]
 
     const { data } = await supabase
       .from("game_sessions")
-      .insert([{ game_id: gameSessionString, players: playersData, isHost: true }]);
+      .insert([{ game_id: gameSessionString, players: playersData }]);
 
     return new Response(JSON.stringify({ message: "Game session created!", data: data, gameId: gameSessionString }), {
       status: 200,
