@@ -66,7 +66,7 @@ export default function Lobby() {
   return (
     <div className="h-screen w-full flex justify-center items-center flex-col">
       <h2 className="text-left mb-4 text-4xl font-extrabold dark:text-white">
-        Waiting Lobby:
+        Waiting Lobby Code: {game_id}
       </h2>
       {isLoading ? (
         <div>
