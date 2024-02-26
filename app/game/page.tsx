@@ -17,8 +17,11 @@ export default function Game() {
     setColors(updatedColors);
     setQuestionNumber(questionNumber + 1)
   };
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [quest, setQuestions] = useState<any>([]);
 
   useEffect(() => {
+    fetchQuestions();
     const timeId = setTimeout(() => {
       setShow(false)
     }, 5000)
@@ -28,7 +31,8 @@ export default function Game() {
     }
   }, []);
 
-  const questions = [
+  
+  var questions = [
     {
       question: "What type of framework is Next.js?",
       answerOptions: [
@@ -76,6 +80,33 @@ export default function Game() {
     },
   ];
 
+  const fetchQuestions = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/v1/getQuestions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ game_id }),
+      });
+      const { data } = await response.json();
+
+      console.log(data);
+      console.log(data[1].question);
+      setQuestions(data);
+      console.log(quest);
+
+    } catch (error) {
+      console.error(
+        "An error occurred while trying to fetch game session data:",
+        error
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Suspense>
       <div className="flex flex-col w-screen px-5 h-screen justify-center items-center">
@@ -85,7 +116,7 @@ export default function Game() {
           <div className="mt-4 text-2xl text-white">
             {questions[questionNumber].question}
           </div>
-          <div className="flex flex-col w-full">
+          {/* <div className="flex flex-col w-full">
             {questions[questionNumber].answerOptions.map((answer, index) => (
               <button
                 key={index}
@@ -96,7 +127,7 @@ export default function Game() {
                 <p className="ml-6 text-white">{answer.answer}</p>
               </button>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </Suspense>
