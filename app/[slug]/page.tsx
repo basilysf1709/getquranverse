@@ -5,18 +5,21 @@ import { CiCircleCheck } from "react-icons/ci";
 import { supabase } from "@/utils/supabase/client";
 import { Loading } from "@/components/Loading/Loading";
 import { useRouter } from "next/navigation";
+import { FaRegCopy } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 
 export default function Lobby() {
-  const router = useRouter()
+  const router = useRouter();
   const searchParams = useSearchParams();
   const isHost = searchParams.get("isHost");
   const game_id: string = usePathname().replace(/^\//, "");
   const [participants, setParticipants] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [check, setCheck] = useState<boolean>(true);
 
   const handleOnClick = async (event: any) => {
-    event.preventDefault()
-    router.push(`/game?game_id=${game_id}`)
+    event.preventDefault();
+    router.push(`/game?game_id=${game_id}`);
     const response = await fetch("/api/v1/startGame", {
       method: "POST",
       headers: {
@@ -25,7 +28,7 @@ export default function Lobby() {
       body: JSON.stringify({ game_id }),
     });
     await response.json();
-  }
+  };
 
   const fetchPlayers = async () => {
     setIsLoading(true);
@@ -58,22 +61,22 @@ export default function Lobby() {
   useEffect(() => {
     fetchPlayers();
     const handleUpdates = (payload: any) => {
-      console.log(payload)
-      if(payload?.new?.game_started === true) {
-        router.push(`/game?game_id=${game_id}`)
+      console.log(payload);
+      if (payload?.new?.game_started === true) {
+        router.push(`/game?game_id=${game_id}`);
       } else {
         fetchPlayers();
       }
     };
     const channel = supabase
-      .channel("game_sessions")
+      .channel("players")
       .on(
         "postgres_changes",
         {
-          event: "UPDATE",
+          event: "INSERT",
           schema: "public",
-          filter: `game_id=eq.${game_id}`,
-          table: "game_sessions",
+          filter: `session_id=eq.${game_id}`,
+          table: "players",
         },
         handleUpdates
       )
@@ -86,9 +89,18 @@ export default function Lobby() {
 
   return (
     <div className="h-screen w-full flex justify-center items-center flex-col">
-      <h2 className="text-left mb-4 text-4xl font-extrabold dark:text-white">
-        Waiting Lobby Code: {game_id}
-      </h2>
+      <span className="text-left mb-4 text-4xl font-extrabold dark:text-white">
+        Copy Lobby Code:
+        <button
+          className="p-4"
+          onClick={() => {
+            navigator.clipboard.writeText(game_id);
+            setCheck(false)
+          }}
+        >
+          {check ? <FaRegCopy className="pt-1 w-8 h-8" /> : <FaCheck className="pt-1 w-8 h-8" />}
+        </button>
+      </span>
       {isLoading ? (
         <div>
           <Loading />
@@ -118,9 +130,16 @@ export default function Lobby() {
           ))}
         </ul>
       )}
-      {isHost ? (<button onClick={handleOnClick} className="w-7/12 m-4 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5">
-        Start Game
-      </button>) : <></>}
+      {isHost ? (
+        <button
+          onClick={handleOnClick}
+          className="w-7/12 m-4 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5"
+        >
+          Start Game
+        </button>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

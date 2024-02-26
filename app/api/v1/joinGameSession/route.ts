@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const supabase = createClient(cookieStore);
     const { username, game_id } = await req.json();
     const { data, error } = await supabase.rpc("join_game_session", {
-      game_id_param: game_id,
+      uuid_param: game_id,
       username_param: username,
     });
     if (error) {
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       throw error;
     }
     return new Response(
-      JSON.stringify({ message: "User Added!", data: data }),
+      JSON.stringify({ message: "User Added!", data: data, game_id: game_id }),
       {
         status: 200,
         headers: { "Content-Type": "application/json" },

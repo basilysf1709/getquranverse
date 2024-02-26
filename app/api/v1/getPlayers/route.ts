@@ -7,9 +7,10 @@ export async function POST(req: NextRequest) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const { game_id } = await req.json();
-    const { data, error } = await supabase.rpc("get_players", {
-      game_id_param: game_id,
-    });
+    const { data, error } = await supabase
+      .from("players")
+      .select("*")
+      .eq("session_id", game_id);
     if (error) {
       console.error(error);
       throw error;

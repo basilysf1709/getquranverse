@@ -6,18 +6,18 @@ export async function POST(req: NextRequest) {
   try {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    const { username, game_id, score } = await req.json();
-    const { data, error } = await supabase.rpc("update_player_score", {
-      game_id_param: game_id,
-      username_param: username,
-      addscore: score
+    const { player_id, score } = await req.json();
+    const { data, error } = await supabase.rpc("add_score", {
+      player_id_param: player_id,
+      score_param: score
     });
+    
     if (error) {
       console.error(error);
       throw error;
     }
     return new Response(
-      JSON.stringify({ message: `Added score for ${username}`, data: data }),
+      JSON.stringify({ message: `Added score for ${player_id}`, data: data }),
       {
         status: 200,
         headers: { "Content-Type": "application/json" },

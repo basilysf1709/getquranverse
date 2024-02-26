@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Join() {
   const router = useRouter()
@@ -12,7 +13,6 @@ export default function Join() {
       },
       body: JSON.stringify({ username, game_id }),
     });
-    console.log(game_id);
     return response.json();
   };
   const handleSubmit = async (event: any) => {

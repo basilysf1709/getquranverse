@@ -3,20 +3,25 @@ import { PlayersData } from "@/types/types";
 import { cookies } from "next/headers";
 import { generateRandomString } from "@/utils/util_functions";
 import { NextRequest } from "next/server";
+import {v4 as uuidv4} from 'uuid';
+
 
 export async function POST(req: NextRequest) {
   try {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    const gameSessionString = generateRandomString(6);
     const { username } = await req.json();
-    const playersData : PlayersData = [{ username: username, score: 0, isHost: true }]
+    const uuid = uuidv4()
 
-    const { data } = await supabase
-      .from("game_sessions")
-      .insert([{ game_id: gameSessionString, players: playersData }]);
-
-    return new Response(JSON.stringify({ message: "Game session created!", data: data, gameId: gameSessionString }), {
+    const { data, error } = await supabase.rpc("create_game_session", {
+      uuid_param: uuid,
+      username_param: username
+    });
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+    return new Response(JSON.stringify({ message: "Game session created!", data: data, game_id: uuid }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

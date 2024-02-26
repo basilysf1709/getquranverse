@@ -2,13 +2,31 @@
 
 import { Loading } from "@/components/Loading/Loading";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import "./game.css";
 
 export default function Game() {
   const searchParams = useSearchParams();
+  const [colors, setColors] = useState<string[]>(Array(4).fill("white/10"));
+  const [questionNumber, setQuestionNumber] = useState<number>(0)
+  const [show, setShow] = useState<boolean>(true)
   const game_id = searchParams.get("game_id");
-  console.log(game_id);
+  const handleOnClick = (index: number, answer: string) => {
+    const updatedColors = [...colors];
+    updatedColors[index] = 'green-200';
+    setColors(updatedColors);
+    setQuestionNumber(questionNumber + 1)
+  };
+
+  useEffect(() => {
+    const timeId = setTimeout(() => {
+      setShow(false)
+    }, 5000)
+
+    return () => {
+      clearTimeout(timeId)
+    }
+  }, []);
 
   const questions = [
     {
@@ -21,31 +39,39 @@ export default function Game() {
       ],
     },
     {
-      question: "When was Next.js released?",
+      question: "What type of framework is Next.js?",
       answerOptions: [
-        { answer: "20 September 2019" },
-        { answer: "14 January 2017" },
-        { answer: "25 October 2016", isCorrect: true },
-        { answer: "28 March 2018" },
+        { answer: "Surah Hashr" },
+        { answer: "Surah Yasin" },
+        { answer: "Surah Fath", isCorrect: true },
+        { answer: "Surah Ghafir" },
       ],
     },
     {
-      question: "Which CSS Framework are we using?",
+      question: "What type of framework is Next.js?",
       answerOptions: [
-        { answer: "Bootstrap" },
-        { answer: "TailwindCSS", isCorrect: true },
-        { answer: "Chakra UI" },
-        { answer: "Bulma CSS" },
+        { answer: "Surah Yasin" },
+        { answer: "Surah Hashr" },
+        { answer: "Surah Fath", isCorrect: true },
+        { answer: "Surah Ghafir" },
       ],
     },
     {
-      question:
-        "Which class in Tailwind is used to set flex direction of column?",
+      question: "What type of framework is Next.js?",
       answerOptions: [
-        { answer: "col" },
-        { answer: "col-flex" },
-        { answer: "flex-col", isCorrect: true },
-        { answer: "None of the above" },
+        { answer: "Surah Yasin" },
+        { answer: "Surah Hashr" },
+        { answer: "Surah Fath", isCorrect: true },
+        { answer: "Surah Ghafir" },
+      ],
+    },
+    {
+      question: "What type of framework is Next.js?",
+      answerOptions: [
+        { answer: "Surah Yasin" },
+        { answer: "Surah Hashr" },
+        { answer: "Surah Fath", isCorrect: true },
+        { answer: "Surah Ghafir" },
       ],
     },
   ];
@@ -53,21 +79,22 @@ export default function Game() {
   return (
     <Suspense>
       <div className="flex flex-col w-screen px-5 h-screen justify-center items-center">
-        <Loading />
+        {show ? <Loading /> : <></>}
         <div className="flex flex-col items-start w-full">
-          <h4 className="mt-10 text-xl text-white/60">Question 1 of 5</h4>
+          <h4 className="mt-10 text-xl text-white/60">Question {questionNumber + 1} of 5</h4>
           <div className="mt-4 text-2xl text-white">
-            What is my favorite Surah of the Quran?
+            {questions[questionNumber].question}
           </div>
           <div className="flex flex-col w-full">
-            {questions[0].answerOptions.map((answer, index) => (
-              <div
+            {questions[questionNumber].answerOptions.map((answer, index) => (
+              <button
                 key={index}
-                className="flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer border-white/10 rounded-xl"
+                className={`flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer border-${colors[index]} rounded-xl`}
+                onClick={() => handleOnClick(index, answer.answer)}
               >
-                <input type="radio" className="w-6 h-6" />
+                <span className="button-style w-6 h-6" />
                 <p className="ml-6 text-white">{answer.answer}</p>
-              </div>
+              </button>
             ))}
           </div>
         </div>
