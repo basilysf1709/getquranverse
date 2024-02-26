@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const {data, error} = await supabase
       .from("game_sessions")
       .update({ game_started: true })
-      .match({ game_id: game_id });
+      .match({ session_id: game_id });
 
     return new Response(JSON.stringify({ message: "Game session updated!", data: data }), {
       status: 200,
