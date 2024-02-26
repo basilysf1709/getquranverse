@@ -68,7 +68,7 @@ export default function Lobby() {
         fetchPlayers();
       }
     };
-    const channel = supabase
+    const channel_players = supabase
       .channel("players")
       .on(
         "postgres_changes",
@@ -81,9 +81,23 @@ export default function Lobby() {
         handleUpdates
       )
       .subscribe();
+    const channel_game_session = supabase
+      .channel("game_sessions")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          filter: `session_id=eq.${game_id}`,
+          table: "game_sessions",
+        },
+        handleUpdates
+      )
+      .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(channel_players);
+      supabase.removeChannel(channel_game_session);
     };
   }, [supabase]);
 
@@ -95,10 +109,14 @@ export default function Lobby() {
           className="p-4"
           onClick={() => {
             navigator.clipboard.writeText(game_id);
-            setCheck(false)
+            setCheck(false);
           }}
         >
-          {check ? <FaRegCopy className="pt-1 w-8 h-8" /> : <FaCheck className="pt-1 w-8 h-8" />}
+          {check ? (
+            <FaRegCopy className="pt-1 w-8 h-8" />
+          ) : (
+            <FaCheck className="pt-1 w-8 h-8" />
+          )}
         </button>
       </span>
       {isLoading ? (
