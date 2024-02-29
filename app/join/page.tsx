@@ -21,6 +21,7 @@ export default function Join() {
       const username = event.target.username.value;
       const game_id = event.target.game_id.value;
       const res = await joinGameSession(username, game_id);
+      console.log(res)
       router.push(game_id);
     } catch (error) {
       console.error(

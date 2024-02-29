@@ -29,8 +29,6 @@ export default function Host() {
         "An error occurred while trying to create game session:",
         error
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
