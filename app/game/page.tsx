@@ -70,7 +70,7 @@ export default function Game() {
   } else {
     return (
       <div className="flex flex-col w-screen px-5 h-screen justify-center items-center">
-        {/* {show ? <Loading /> : <></>} */}
+        {show ? <Loading /> : <></>}
         <div className="flex flex-col items-start w-full">
           <h4 className="mt-10 text-xl text-white/60">
             Question {questionNumber} of 5
@@ -81,7 +81,7 @@ export default function Game() {
                 Your browser does not support the audio element.
               </audio>
               <div className="mt-4 text-2xl text-white">
-                What is him? He&apos;s him
+                {questions[questionNumber - 1].question}
               </div>
               <div className="flex flex-col w-full">
                 <button
