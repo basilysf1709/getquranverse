@@ -23,3 +23,23 @@ input[type="radio"]:checked:after {
   visibility: visible;
   border: 2px solid white;
 }
+
+@keyframes blinkGreen {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: green; }
+}
+
+@keyframes blinkRed {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: red; }
+}
+
+.blink-green {
+  animation: blinkGreen 0.5s linear infinite;
+  animation-iteration-count: 5;
+}
+
+.blink-red {
+  animation: blinkRed 0.5s linear infinite;
+  animation-iteration-count: 5;
+}

@@ -2,15 +2,18 @@
 
 import { Loading } from "@/components/Loading/Loading";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./game.css";
 
 export default function Game() {
   const searchParams = useSearchParams();
-  const [colors, setColors] = useState<string[]>(Array(4).fill("white/10"));
-  const [questionNumber, setQuestionNumber] = useState<number>(0);
+  const [colors, setColors] = useState<string[]>(
+    Array(4).fill("border-white/10")
+  );
+  const [questionNumber, setQuestionNumber] = useState<number>(1);
   const [show, setShow] = useState<boolean>(true);
   const [questions, setQuestions] = useState<any>();
+  const [waiting, setWaiting] = useState<boolean>();
   const game_id = searchParams.get("game_id");
 
   useEffect(() => {
@@ -38,7 +41,7 @@ export default function Game() {
     fetchQuestions();
     const timeId = setTimeout(() => {
       setShow(false);
-    }, 5000);
+    }, 10000);
 
     return () => {
       clearTimeout(timeId);
@@ -46,68 +49,84 @@ export default function Game() {
   }, []);
 
   const handleOnClick = (index: number) => {
-    if (questions !== undefined && questions[0].answer_in === index) {
-      const updatedColors = [...colors];
-      updatedColors[index - 1] = "green-600";
-      console.log("correct");
-      setColors(updatedColors);
-      console.log(updatedColors);
-    } else {
-      const updatedColors = [...colors];
-      updatedColors[index - 1] = "blue-300";
-      console.log("wrong");
-      setColors(updatedColors);
-    }
-    setQuestionNumber(questionNumber + 1);
-  };
+    let isCorrect =
+      questions !== undefined && questions[0].answer_index === index;
+    const updatedColors = [...colors];
+    updatedColors[index - 1] = isCorrect ? "blink-green" : "blink-red";
+    setColors(updatedColors);
 
-  return (
-    <div className="flex flex-col w-screen px-5 h-screen justify-center items-center">
-      {show ? <Loading /> : <></>}
-      <div className="flex flex-col items-start w-full">
-        <h4 className="mt-10 text-xl text-white/60">
-          Question {questionNumber + 1} of 5
-        </h4>
-        {questions !== undefined ? (
-          <>
-            <div className="mt-4 text-2xl text-white">
-              What is him? He&apos;s him
-            </div>
-            <div className="flex flex-col w-full">
-              <button
-                className={`flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer border-${colors[0]} rounded-xl`}
-                onClick={() => handleOnClick(1)}
-              >
-                <span className="button-style w-6 h-6" />
-                <p className="ml-6 text-white">{questions[0].option_1}</p>
-              </button>
-              <button
-                className={`flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer border-${colors[1]} rounded-xl`}
-                onClick={() => handleOnClick(2)}
-              >
-                <span className="button-style w-6 h-6" />
-                <p className="ml-6 text-white">{questions[0].option_2}</p>
-              </button>
-              <button
-                className={`flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer border-${colors[2]} rounded-xl`}
-                onClick={() => handleOnClick(3)}
-              >
-                <span className="button-style w-6 h-6" />
-                <p className="ml-6 text-white">{questions[0].option_3}</p>
-              </button>
-              <button
-                className={`flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer border-${colors[3]} rounded-xl`}
-                onClick={() => handleOnClick(4)}
-              >
-                <span className="button-style w-6 h-6" />
-                <p className="ml-6 text-white">{questions[0].option_4}</p>
-              </button>
-            </div>
-          </>
-        ) : (
-          <p>Loading...</p>
-        )}
+    setTimeout(() => {
+      setQuestionNumber(questionNumber + 1);
+      setWaiting(true);
+      setTimeout(() => {
+        setWaiting(false);
+        const resetColors = colors.map(() => "border-white/10");
+        setColors(resetColors);
+      }, 1000);
+    }, 2000);
+  };
+  if (waiting === true) {
+    return <p>Waiting for other players...</p>;
+  } else {
+    return (
+      <div className="flex flex-col w-screen px-5 h-screen justify-center items-center">
+        {/* {show ? <Loading /> : <></>} */}
+        <div className="flex flex-col items-start w-full">
+          <h4 className="mt-10 text-xl text-white/60">
+            Question {questionNumber} of 5
+          </h4>
+          {questions !== undefined ? (
+            <>
+              <audio controls src={questions[questionNumber - 1].audio_clip} autoPlay>
+                Your browser does not support the audio element.
+              </audio>
+              <div className="mt-4 text-2xl text-white">
+                What is him? He&apos;s him
+              </div>
+              <div className="flex flex-col w-full">
+                <button
+                  className={`flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer ${colors[0]} rounded-xl`}
+                  onClick={() => handleOnClick(1)}
+                >
+                  <span className="button-style w-6 h-6" />
+                  <p className="ml-6 text-white">
+                    {questions[questionNumber - 1].option_1}
+                  </p>
+                </button>
+                <button
+                  className={`flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer ${colors[1]} rounded-xl`}
+                  onClick={() => handleOnClick(2)}
+                >
+                  <span className="button-style w-6 h-6" />
+                  <p className="ml-6 text-white">
+                    {questions[questionNumber - 1].option_2}
+                  </p>
+                </button>
+                <button
+                  className={`flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer ${colors[2]} rounded-xl`}
+                  onClick={() => handleOnClick(3)}
+                >
+                  <span className="button-style w-6 h-6" />
+                  <p className="ml-6 text-white">
+                    {questions[questionNumber - 1].option_3}
+                  </p>
+                </button>
+                <button
+                  className={`flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer ${colors[3]} rounded-xl`}
+                  onClick={() => handleOnClick(4)}
+                >
+                  <span className="button-style w-6 h-6" />
+                  <p className="ml-6 text-white">
+                    {questions[questionNumber - 1].option_4}
+                  </p>
+                </button>
+              </div>
+            </>
+          ) : (
+            <p>Loading...</p>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
