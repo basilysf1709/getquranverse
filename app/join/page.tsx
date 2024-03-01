@@ -20,8 +20,8 @@ export default function Join() {
     try {
       const username = event.target.username.value;
       const game_id = event.target.game_id.value;
-      const res = await joinGameSession(username, game_id);
-      router.push(game_id);
+      const {player_id} = await joinGameSession(username, game_id);
+      router.push(`${game_id}?player_id=${player_id}`);
     } catch (error) {
       console.error(
         "An error occurred while trying to join game session:",

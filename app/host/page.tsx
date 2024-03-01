@@ -23,7 +23,7 @@ export default function Host() {
     try {
       const username = event.target.username.value;
       const { game_id, player_uuid } = await hostGameSession(username);
-      router.push(`${game_id}?player_id=${player_uuid}&isHost=true`);
+      router.push(`${game_id}?player_id=${player_uuid}`);
     } catch (error) {
       console.error(
         "An error occurred while trying to create game session:",

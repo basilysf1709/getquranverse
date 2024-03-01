@@ -11,15 +11,16 @@ import { FaCheck } from "react-icons/fa";
 export default function Lobby() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isHost = searchParams.get("player_id");
+  const player_id = searchParams.get("player_id");
   const game_id: string = usePathname().replace(/^\//, "");
   const [participants, setParticipants] = useState<any>([]);
+  const [showButton, setShowButton] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [check, setCheck] = useState<boolean>(true);
 
   const handleOnClick = async (event: any) => {
     event.preventDefault();
-    router.push(`/game?game_id=${game_id}`);
+    router.push(`/game?game_id=${game_id}&player_id=${player_id}`);
     const response = await fetch("/api/v1/startGame", {
       method: "POST",
       headers: {
@@ -41,6 +42,11 @@ export default function Lobby() {
         body: JSON.stringify({ game_id }),
       });
       const { data } = await response.json();
+      for(let player of data) {
+        if (player.player_id === player_id && player.isHost === true) {
+          setShowButton(true)
+        }
+      }
       const updatedParticipants = data.map(
         (participant: any, index: number) => ({
           ...participant,
@@ -147,7 +153,7 @@ export default function Lobby() {
           ))}
         </ul>
       )}
-      {isHost ? (
+      {showButton ? (
         <button
           onClick={handleOnClick}
           className="w-7/12 m-4 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5"
