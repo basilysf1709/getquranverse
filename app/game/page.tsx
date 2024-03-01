@@ -72,12 +72,12 @@ export default function Game() {
       <div className="flex flex-col w-screen px-5 h-screen justify-center items-center">
         {show ? <Loading /> : <></>}
         <div className="flex flex-col items-start w-full">
-          <h4 className="mt-10 text-xl text-white/60">
-            Question {questionNumber} of 5
-          </h4>
           {questions !== undefined ? (
             <>
-              <audio controls id="song" className="block w-full max-w-md mx-auto" src={questions[questionNumber - 1].audio_clip}>
+              <h4 className="mt-10 text-xl text-white/60">
+                Question {questionNumber} of {questions.length}
+              </h4>
+              <audio autoPlay controls id="song" className="block w-full max-w-md mx-auto" src={questions[questionNumber - 1].audio_clip}>
               </audio>
               <div className="mt-4 text-2xl text-white">
                 {questions[questionNumber - 1].question}
