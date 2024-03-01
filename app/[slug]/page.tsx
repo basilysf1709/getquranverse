@@ -68,7 +68,8 @@ export default function Lobby() {
     fetchPlayers();
     const handleUpdates = (payload: any) => {
       if (payload?.new?.game_started === true) {
-        router.push(`/game?game_id=${game_id}`);
+        console.log(player_id)
+        router.push(`/game?game_id=${game_id}&player_id=${player_id}`);
       } else {
         fetchPlayers();
       }
