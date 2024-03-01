@@ -50,7 +50,7 @@ export default function Game() {
 
   const handleOnClick = (index: number) => {
     let isCorrect =
-      questions !== undefined && questions[questionNumber].answer_index === index;
+      questions !== undefined && questions[questionNumber - 1].answer_index === index;
     const updatedColors = [...colors];
     updatedColors[index - 1] = isCorrect ? "blink-green" : "blink-red";
     setColors(updatedColors);
@@ -77,7 +77,7 @@ export default function Game() {
           </h4>
           {questions !== undefined ? (
             <>
-              <audio controls src={questions[questionNumber - 1].audio_clip} autoPlay>
+              <audio controls src={questions[questionNumber - 1].audio_clip}>
                 Your browser does not support the audio element.
               </audio>
               <div className="mt-4 text-2xl text-white">
