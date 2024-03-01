@@ -77,8 +77,7 @@ export default function Game() {
           </h4>
           {questions !== undefined ? (
             <>
-              <audio controls src={questions[questionNumber - 1].audio_clip}>
-                Your browser does not support the audio element.
+              <audio controls id="song" className="block w-full max-w-md mx-auto" src={questions[questionNumber - 1].audio_clip}>
               </audio>
               <div className="mt-4 text-2xl text-white">
                 {questions[questionNumber - 1].question}
