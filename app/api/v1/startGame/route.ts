@@ -7,14 +7,11 @@ export async function POST(req: NextRequest) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const { game_id } = await req.json();
-    console.log(game_id)
 
     const {data, error} = await supabase
       .from("game_sessions")
       .update({ game_started: true })
       .match({ session_id: game_id });
-
-    console.log(data)
 
     return new Response(JSON.stringify({ message: "Game session updated!", data: data }), {
       status: 200,

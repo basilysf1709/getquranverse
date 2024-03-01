@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
       console.error(error);
       throw error;
     }
+    console.log(data)
     return new Response(
       JSON.stringify({ message: "Get Players!", data: data }),
       {

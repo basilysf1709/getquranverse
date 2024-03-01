@@ -11,7 +11,7 @@ import { FaCheck } from "react-icons/fa";
 export default function Lobby() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isHost = searchParams.get("isHost");
+  const isHost = searchParams.get("player_id");
   const game_id: string = usePathname().replace(/^\//, "");
   const [participants, setParticipants] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -61,7 +61,6 @@ export default function Lobby() {
   useEffect(() => {
     fetchPlayers();
     const handleUpdates = (payload: any) => {
-      console.log(payload);
       if (payload?.new?.game_started === true) {
         router.push(`/game?game_id=${game_id}`);
       } else {
