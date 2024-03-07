@@ -42,7 +42,7 @@ export default function Join() {
           type="username"
           id="username"
           className="mb-2 w-full shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block p-2.5"
-          placeholder="Asfandyaar Talhat"
+          placeholder="Your username..."
           required
         />
         <label
