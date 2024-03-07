@@ -2,11 +2,12 @@
 
 import { Loading } from "@/components/Loading/Loading";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./game.css";
 
 export default function Game() {
   const searchParams = useSearchParams();
+  const animationLock = useRef(false);
   const [colors, setColors] = useState<string[]>(
     Array(4).fill("border-white/10")
   );
@@ -14,6 +15,7 @@ export default function Game() {
   const [show, setShow] = useState<boolean>(true);
   const [questions, setQuestions] = useState<any>();
   const [waiting, setWaiting] = useState<boolean>();
+
   const game_id = searchParams.get("game_id");
 
   useEffect(() => {
@@ -49,13 +51,18 @@ export default function Game() {
   }, []);
 
   const handleOnClick = (index: number) => {
+    if (animationLock.current) return;
+
+    animationLock.current = true;
     let isCorrect =
-      questions !== undefined && questions[questionNumber - 1].answer_index === index;
+      questions !== undefined &&
+      questions[questionNumber - 1].answer_index === index;
     const updatedColors = [...colors];
     updatedColors[index - 1] = isCorrect ? "blink-green" : "blink-red";
     setColors(updatedColors);
 
     setTimeout(() => {
+      animationLock.current = false;
       setQuestionNumber(questionNumber + 1);
       setWaiting(true);
       setTimeout(() => {
@@ -77,8 +84,13 @@ export default function Game() {
               <h4 className="mt-10 text-xl text-white/60">
                 Question {questionNumber} of {questions.length}
               </h4>
-              <audio autoPlay controls id="song" className="block w-full max-w-md mx-auto" src={questions[questionNumber - 1].audio_clip}>
-              </audio>
+              <audio
+                autoPlay
+                controls
+                id="song"
+                className="block w-full max-w-md mx-auto"
+                src={questions[questionNumber - 1].audio_clip}
+              ></audio>
               <div className="mt-4 text-2xl text-white">
                 {questions[questionNumber - 1].question}
               </div>
