@@ -1,12 +1,13 @@
 "use client";
 
 import { Loading } from "@/components/Loading/Loading";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import "./game.css";
 
 export default function Game() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const animationLock = useRef(false);
   const [colors, setColors] = useState<string[]>(
     Array(4).fill("border-white/10")
@@ -15,6 +16,7 @@ export default function Game() {
   const [show, setShow] = useState<boolean>(true);
   const [questions, setQuestions] = useState<any>();
   const [waiting, setWaiting] = useState<boolean>();
+  const [score, setScore] = useState<number>(0);
 
   const game_id = searchParams.get("game_id");
 
@@ -57,12 +59,18 @@ export default function Game() {
     let isCorrect =
       questions !== undefined &&
       questions[questionNumber - 1].answer_index === index;
+    if (isCorrect) {
+      setScore(score + 1);
+    }
     const updatedColors = [...colors];
     updatedColors[index - 1] = isCorrect ? "blink-green" : "blink-red";
     setColors(updatedColors);
 
     setTimeout(() => {
       animationLock.current = false;
+      if (questionNumber === 10) {
+        router.push(`/congrats?score=${score}`);
+      }
       setQuestionNumber(questionNumber + 1);
       setWaiting(true);
       setTimeout(() => {
