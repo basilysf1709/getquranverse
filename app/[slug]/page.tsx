@@ -146,7 +146,7 @@ export default function Lobby() {
                   </p>
                 </div>
                 <div className="inline-flex items-center text-base font-semibold">
-                  <CiCircleCheck size={30} fill="rgb(126 34 206)" />
+                  <CiCircleCheck size={30} fill="#588157" />
                 </div>
               </div>
             </li>
@@ -156,7 +156,7 @@ export default function Lobby() {
       {showButton ? (
         <button
           onClick={handleOnClick}
-          className="w-7/12 m-4 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5"
+          className="w-7/12 m-4 text-white bg-custom-light-green hover:bg-hover-green focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5"
         >
           Start Game
         </button>
