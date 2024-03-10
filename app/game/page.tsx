@@ -3,6 +3,7 @@
 import { Loading } from "@/components/Loading/Loading";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/utils/supabase/client";
 import "./game.css";
 
 export default function Game() {
@@ -44,14 +45,27 @@ export default function Game() {
       }
     };
     fetchQuestions();
-    const timeId = setTimeout(() => {
-      setShow(false);
-    }, 10000);
+    // const timeId = setTimeout(() => {
+    //   setShow(false);
+    // }, 10000);
 
+    const channel_game_session = supabase
+      .channel("game_sessions")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          filter: `session_id=eq.${game_id}`,
+          table: "game_sessions",
+        },
+        handleUpdates
+      )
+      .subscribe();
     return () => {
-      clearTimeout(timeId);
+      supabase.removeChannel(channel_game_session);
     };
-  }, []);
+  }, [supabase]);
 
   const handleOnClick = (index: number) => {
     if (animationLock.current) return;
@@ -76,11 +90,19 @@ export default function Game() {
       setQuestionNumber(questionNumber + 1);
       setWaiting(true);
       setTimeout(() => {
-        setWaiting(false);
         const resetColors = colors.map(() => "border-white/10");
         setColors(resetColors);
       }, 1000);
     }, 2000);
+  };
+  const handleUpdates = (payload: any) => {
+    console.log("Update happened");
+    console.log(payload);
+    if(payload?.new?.total_turns % payload?.new?.total_players === 0) {
+      setTimeout(() => {
+        setWaiting(false);
+      }, 3000);
+    }
   };
   const updateScore = async (newScore: number) => {
     try {
@@ -105,7 +127,7 @@ export default function Game() {
   };
   if (waiting === true) {
     return (
-      <div>
+      <div className="flex flex-col w-screen px-5 h-screen justify-center items-center">
         <p>Waiting for other players...</p>
       </div>
     );
