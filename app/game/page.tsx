@@ -84,10 +84,10 @@ export default function Game() {
   };
   const updateScore = async (newScore: number) => {
     try {
-      const response = await fetch('/api/v1/addScore', {
-        method: 'POST',
+      const response = await fetch("/api/v1/addScore", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           game_id,
@@ -95,12 +95,12 @@ export default function Game() {
           score: newScore,
         }),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to update score');
+        throw new Error("Failed to update score");
       }
     } catch (error) {
-      console.error('Error updating score:', error);
+      console.error("Error updating score:", error);
     }
   };
   if (waiting === true) {
