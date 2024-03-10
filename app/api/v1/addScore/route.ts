@@ -6,8 +6,9 @@ export async function POST(req: NextRequest) {
   try {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    const { player_id, score } = await req.json();
+    const { game_id, player_id, score } = await req.json();
     const { data, error } = await supabase.rpc("add_score", {
+      game_id_param: game_id,
       player_id_param: player_id,
       score_param: score
     });

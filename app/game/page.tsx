@@ -19,6 +19,7 @@ export default function Game() {
   const [score, setScore] = useState<number>(0);
 
   const game_id = searchParams.get("game_id");
+  const player_id = searchParams.get("player_id");
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -61,6 +62,7 @@ export default function Game() {
       questions[questionNumber - 1].answer_index === index;
     if (isCorrect) {
       setScore(score + 1);
+      updateScore(1);
     }
     const updatedColors = [...colors];
     updatedColors[index - 1] = isCorrect ? "blink-green" : "blink-red";
@@ -80,8 +82,33 @@ export default function Game() {
       }, 1000);
     }, 2000);
   };
+  const updateScore = async (newScore: number) => {
+    try {
+      const response = await fetch('/api/v1/addScore', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          game_id,
+          player_id,
+          score: newScore,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update score');
+      }
+    } catch (error) {
+      console.error('Error updating score:', error);
+    }
+  };
   if (waiting === true) {
-    return <p>Waiting for other players...</p>;
+    return (
+      <div>
+        <p>Waiting for other players...</p>
+      </div>
+    );
   } else {
     return (
       <div className="flex flex-col w-screen px-5 h-screen justify-center items-center">
