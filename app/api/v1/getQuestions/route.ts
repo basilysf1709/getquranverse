@@ -6,8 +6,10 @@ export async function POST(req: NextRequest) {
   try {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
+    const {game_id, limit_value} = await req.json();
     const { data, error } = await supabase.rpc("random_questions", {
-      limit_value: 10,
+      game_id_param: game_id,
+      limit_value: limit_value
     });
 
     if (error) {

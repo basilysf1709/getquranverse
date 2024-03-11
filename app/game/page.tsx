@@ -25,12 +25,13 @@ export default function Game() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
+        const limit_value = 10;
         const response = await fetch("/api/v1/getQuestions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ game_id }),
+          body: JSON.stringify({ game_id, limit_value }),
         });
         if (!response.ok) {
           throw new Error("Failed to fetch questions");
@@ -45,9 +46,6 @@ export default function Game() {
       }
     };
     fetchQuestions();
-    // const timeId = setTimeout(() => {
-    //   setShow(false);
-    // }, 10000);
 
     const channel_game_session = supabase
       .channel("game_sessions")
