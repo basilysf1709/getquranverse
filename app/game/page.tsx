@@ -85,7 +85,7 @@ export default function Game() {
     setTimeout(() => {
       animationLock.current = false;
       if (questionNumber === 10) {
-        router.push(`/congrats?score=${score}`);
+        router.push(`/congrats?game_id=${game_id}`);
       }
       setQuestionNumber(questionNumber + 1);
       setWaiting(true);
@@ -96,8 +96,6 @@ export default function Game() {
     }, 2000);
   };
   const handleUpdates = (payload: any) => {
-    console.log("Update happened");
-    console.log(payload);
     if(payload?.new?.total_turns % payload?.new?.total_players === 0) {
       setTimeout(() => {
         setWaiting(false);
