@@ -75,8 +75,9 @@ export default function Game() {
     if (isCorrect) {
       setScore(score + 1);
       updateScore(1);
+    } else {
+      updateScore(0);
     }
-    updateScore(0);
     const updatedColors = [...colors];
     updatedColors[index - 1] = isCorrect ? "blink-green" : "blink-red";
     setColors(updatedColors);
