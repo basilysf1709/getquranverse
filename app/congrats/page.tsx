@@ -57,7 +57,7 @@ export default function Congrats() {
               <tr key={participant.username} className="border">
                 <td className="px-12 py-4">{index + 1}</td>
                 <td className="px-12 py-4">{participant.username}</td>
-                <td className="px-12 py-4">{participant.score}/10</td>
+                <td className="px-12 py-4">{participant.score}</td>
               </tr>
             ))}
           </tbody>

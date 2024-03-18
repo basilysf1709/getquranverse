@@ -18,9 +18,16 @@ export default function Game() {
   const [questions, setQuestions] = useState<any>();
   const [waiting, setWaiting] = useState<boolean>();
   const [score, setScore] = useState<number>(0);
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [endTime, setEndTime] = useState<Date>(new Date());
+  const [participants, setParticipants] = useState<any>([]);
 
   const game_id = searchParams.get("game_id");
   const player_id = searchParams.get("player_id");
+
+  useEffect(() => {
+    setStartTime(new Date());
+  }, [questionNumber]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -64,20 +71,33 @@ export default function Game() {
       supabase.removeChannel(channel_game_session);
     };
   }, [supabase]);
+  useEffect(() => {
+    if (endTime) {
+      const duration = calculateDuration();
+      console.log(`Time taken to answer: ${duration} milliseconds`);
+    }
+  }, [endTime]);
 
   const handleOnClick = (index: number) => {
     if (animationLock.current) return;
+    setEndTime(new Date());
+    const currentTime = new Date();
 
     animationLock.current = true;
     let isCorrect =
       questions !== undefined &&
       questions[questionNumber - 1].answer_index === index;
+
+    const timeTaken = currentTime.getTime() - startTime.getTime();
+
+    let scoreToAdd = 0;
     if (isCorrect) {
-      setScore(score + 1);
-      updateScore(1);
-    } else {
-      updateScore(0);
+      const timeInSeconds = timeTaken / 1000;
+      scoreToAdd = 100 - Math.floor(timeInSeconds); // Subtract 1 point for each second
+      scoreToAdd = Math.max(scoreToAdd, 10); // Ensure score doesn't fall below 10
     }
+    setScore(score + scoreToAdd);
+    updateScore(scoreToAdd);
     const updatedColors = [...colors];
     updatedColors[index - 1] = isCorrect ? "blink-green" : "blink-red";
     setColors(updatedColors);
@@ -96,10 +116,30 @@ export default function Game() {
     }, 2000);
   };
   const handleUpdates = (payload: any) => {
-    if(payload?.new?.total_turns % payload?.new?.total_players === 0) {
+    if (payload?.new?.total_turns % payload?.new?.total_players === 0) {
+      const fetchPlayers = async () => {
+        try {
+          const response = await fetch("/api/v1/getPlayers", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ game_id }),
+          });
+          const { data } = await response.json();
+          const sortedData = data.sort((a: any, b: any) => b.score - a.score);
+          setParticipants(sortedData);
+        } catch (error) {
+          console.error(
+            "An error occurred while trying to fetch player data:",
+            error
+          );
+        }
+      };
+      fetchPlayers();
       setTimeout(() => {
         setWaiting(false);
-      }, 3000);
+      }, 5000);
     }
   };
   const updateScore = async (newScore: number) => {
@@ -123,11 +163,45 @@ export default function Game() {
       console.error("Error updating score:", error);
     }
   };
+  const calculateDuration = () => {
+    if (startTime && endTime) {
+      return endTime.getTime() - startTime.getTime();
+    }
+    return 0;
+  };
   if (waiting === true) {
     return (
-      <div className="flex flex-col w-screen px-5 h-screen justify-center items-center">
-        <p>Waiting for other players...</p>
-      </div>
+      <main className="flex justify-center items-center flex-col h-screen">
+        <h1 className="mb-8">
+          Waiting for other players, current scores: 
+        </h1>
+        <div className="relative overflow-x-auto">
+          <table className="w-full text-sm text-left text-gray-500">
+            <thead className="text-xs border text-gray-700 uppercase">
+              <tr>
+                <th scope="col" className="px-12 py-3">
+                  Rank
+                </th>
+                <th scope="col" className="px-12 py-3">
+                  Username
+                </th>
+                <th scope="col" className="px-12 py-3">
+                  Final Score
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {participants.map((participant: any, index: number) => (
+                <tr key={participant.username} className="border">
+                  <td className="px-12 py-4">{index + 1}</td>
+                  <td className="px-12 py-4">{participant.username}</td>
+                  <td className="px-12 py-4">{participant.score}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </main>
     );
   } else {
     return (
