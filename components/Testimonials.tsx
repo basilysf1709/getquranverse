@@ -4,7 +4,7 @@ export const Testimonials = () => {
   return (
     <>
       <div className="p-4 flex items-center mb-4">
-        <p className="px-4">650+ visits</p>
+        <p className="px-4">700+ visits</p>
         <svg
           className="w-5 h-5 me-1"
           aria-hidden="true"
