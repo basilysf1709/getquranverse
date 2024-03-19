@@ -102,6 +102,27 @@ export default function Game() {
     updatedColors[index - 1] = isCorrect ? "blink-green" : "blink-red";
     setColors(updatedColors);
 
+    const fetchPlayers = async () => {
+      try {
+        const response = await fetch("/api/v1/getPlayers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ game_id }),
+        });
+        const { data } = await response.json();
+        const sortedData = data.sort((a: any, b: any) => b.score - a.score);
+        setParticipants(sortedData);
+      } catch (error) {
+        console.error(
+          "An error occurred while trying to fetch player data:",
+          error
+        );
+      }
+    };
+    fetchPlayers();
+
     setTimeout(() => {
       animationLock.current = false;
       if (questionNumber === 10) {
@@ -172,9 +193,7 @@ export default function Game() {
   if (waiting === true) {
     return (
       <main className="flex justify-center items-center flex-col h-screen">
-        <h1 className="mb-8">
-          Waiting for other players, current scores: 
-        </h1>
+        <h1 className="mb-8">Waiting for other players, current scores:</h1>
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left text-gray-500">
             <thead className="text-xs border text-gray-700 uppercase">
