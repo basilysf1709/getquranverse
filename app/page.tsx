@@ -1,5 +1,6 @@
 import { HostGame } from "@/components/HostGame";
 import { JoinGame } from "@/components/JoinGame";
+import { SoloGame } from "@/components/SoloGame";
 import { Testimonials } from "@/components/Testimonials";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       <h1 className="p-8 text-4xl font-extrabold leading-none tracking-tight text-white">Ramadan Mubarak 🎉</h1>
       <JoinGame />
       <HostGame />
+      <SoloGame />
       <Testimonials />
     </main>
   );
