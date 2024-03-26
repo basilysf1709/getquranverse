@@ -29,13 +29,13 @@ export default function Game() {
     const fetchQuestions = async () => {
       try {
         const limit_value = searchParams.get('questions');
-        const randomiser_uuid = uuidv4();
+        const random_id = uuidv4();
         const response = await fetch("/api/v1/getQuestions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ randomiser_uuid, limit_value }),
+          body: JSON.stringify({ random_id, limit_value }),
         });
         if (!response.ok) {
           throw new Error("Failed to fetch questions");
