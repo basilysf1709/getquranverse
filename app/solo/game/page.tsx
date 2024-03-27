@@ -20,6 +20,7 @@ export default function Game() {
   const [score, setScore] = useState<number>(0);
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [endTime, setEndTime] = useState<Date>(new Date());
+  const limit_value = searchParams.get('questions');
 
   useEffect(() => {
     setStartTime(new Date());
@@ -83,7 +84,7 @@ export default function Game() {
 
     setTimeout(() => {
       animationLock.current = false;
-      if (questionNumber === questions) {
+      if (limit_value && (questionNumber === parseInt(limit_value))) {
         router.push(`/solo/congrats?score=${score}`);
       }
       setQuestionNumber(questionNumber + 1);
