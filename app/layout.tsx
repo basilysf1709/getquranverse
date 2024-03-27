@@ -7,8 +7,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Guess the verse",
-  description: "Guess the Quran verse",
+  title: "Get Quran Verse: Interactive Quiz Game for Quranic Knowledge",
+  description: "Play Get Quran Verse, an easy-to-play game where you listen to Quranic verses, and guess them correctly. Play solo or host a game with friends! 😊",
 };
 
 export default function RootLayout({
