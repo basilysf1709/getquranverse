@@ -125,7 +125,7 @@ export default function Game() {
 
     setTimeout(() => {
       animationLock.current = false;
-      if (questionNumber === 2) {
+      if (questionNumber === 10) {
         router.push(`/congrats?game_id=${game_id}`);
       }
       setQuestionNumber(questionNumber + 1);
