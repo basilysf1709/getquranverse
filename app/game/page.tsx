@@ -25,14 +25,14 @@ export default function Game() {
   const game_id = searchParams.get("game_id");
   const player_id = searchParams.get("player_id");
 
-  useEffect(() => {
+  const options = useEffect(() => {
     setStartTime(new Date());
   }, [questionNumber]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const limit_value = 2;
+        const limit_value = 10;
         const response = await fetch("/api/v1/getQuestions", {
           method: "POST",
           headers: {
@@ -220,6 +220,17 @@ export default function Game() {
             </tbody>
           </table>
         </div>
+        {/* {questions &&
+          questionNumber > 0 &&
+          questionNumber <= questions.length && (
+            <h1>
+              {
+                questions[questionNumber - 1][
+                  `option_${questions[questionNumber - 1].answer_index}`
+                ]
+              }
+            </h1>
+          )}{" "} */}
       </main>
     );
   } else {
