@@ -32,7 +32,7 @@ export default function Game() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const limit_value = 10;
+        const limit_value = 2;
         const response = await fetch("/api/v1/getQuestions", {
           method: "POST",
           headers: {
@@ -125,7 +125,7 @@ export default function Game() {
 
     setTimeout(() => {
       animationLock.current = false;
-      if (questionNumber === 10) {
+      if (questionNumber === 2) {
         router.push(`/congrats?game_id=${game_id}`);
       }
       setQuestionNumber(questionNumber + 1);
