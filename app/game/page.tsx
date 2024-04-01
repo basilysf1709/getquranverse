@@ -33,12 +33,13 @@ export default function Game() {
     const fetchQuestions = async () => {
       try {
         const limit_value = 10;
+        const difficulty = "easy";
         const response = await fetch("/api/v1/getQuestions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ game_id, limit_value }),
+          body: JSON.stringify({ game_id, limit_value, difficulty }),
         });
         if (!response.ok) {
           throw new Error("Failed to fetch questions");
