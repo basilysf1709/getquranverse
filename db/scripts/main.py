@@ -129,8 +129,23 @@ qari_names = [
   "Minshawi/Murattal"
 ]
 
+surah_ranges_29th_juz = {
+    67: (1, 30),  # Surah Al-Mulk
+    68: (1, 52),  # Surah Al-Qalam
+    69: (1, 52),  # Surah Al-Haaqqa
+    70: (1, 44),  # Surah Al-Maarij
+    71: (1, 28),  # Surah Nuh
+    72: (1, 28),  # Surah Al-Jinn
+    73: (1, 20),  # Surah Al-Muzzammil
+    74: (1, 56),  # Surah Al-Muddathir
+    75: (1, 40),  # Surah Al-Qiyama
+    76: (1, 31),  # Surah Al-Insan
+    77: (1, 50)   # Surah Al-Mursalat
+}
+
+
 # Defining the range of Surahs for the questions
-surah_ranges = {
+surah_ranges_30th_juz = {
     78: (1, 40), 79: (1, 46), 80: (1, 42), 81: (1, 29), 82: (1, 19),
     83: (1, 36), 84: (1, 25), 85: (1, 22), 86: (1, 17), 87: (1, 19),
     88: (1, 26), 89: (1, 30), 90: (1, 20), 91: (1, 15), 92: (1, 21),
@@ -141,10 +156,38 @@ surah_ranges = {
     113: (1, 5), 114: (1, 6)
 }
 
+surah_ranges_21_to_28 = {
+    # 21st Juz
+    29: (45, 69), 30: (1, 60), 31: (1, 34), 32: (1, 30), 33: (1, 30),
+
+    # 22nd Juz
+    33: (31, 73), 34: (1, 54), 35: (1, 45), 36: (1, 27),
+
+    # 23rd Juz
+    36: (28, 83), 37: (1, 182), 38: (1, 88),
+
+    # 24th Juz
+    39: (1, 75), 40: (1, 85),
+
+    # 25th Juz
+    41: (1, 46), 42: (1, 53), 43: (1, 89),
+
+    # 26th Juz
+    44: (1, 59), 45: (1, 37), 46: (1, 35),
+
+    # 27th Juz
+    47: (1, 38), 48: (1, 29), 49: (1, 18), 50: (1, 45), 51: (1, 60),
+
+    # 28th Juz
+    52: (1, 49), 53: (1, 62), 54: (1, 55), 55: (1, 78), 56: (1, 96), 57: (1, 29)
+}
+
+
 def create_question():
     # Selecting a random Surah and Ayah from the updated ranges
-    surah_number = random.choice(list(surah_ranges.keys()))
-    ayah_number = random.randint(*surah_ranges[surah_number])
+    surah_number = random.choice(list(surah_ranges_21_to_28.keys()))
+    ayah_number = random.randint(*surah_ranges_21_to_28[surah_number])
+    
 
     # Selecting a random Qari
     qari_name = random.choice(qari_names)
