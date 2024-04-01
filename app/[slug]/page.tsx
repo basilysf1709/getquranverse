@@ -108,7 +108,7 @@ export default function Lobby() {
 
   return (
     <div className="h-screen w-full flex justify-center items-center flex-col">
-      <span className="text-left mb-4 text-2xl sm:text-3xl md:text-4xl font-extrabold dark:text-white">
+      <span className="text-left mb-4 text-xl sm:text-2xl md:text-3xl font-extrabold dark:text-white">
         Copy Lobby Code:
         <button
           className="p-2 sm:p-3 md:p-4"
@@ -118,9 +118,9 @@ export default function Lobby() {
           }}
         >
           {check ? (
-            <FaRegCopy className="pt-1 w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
+            <FaRegCopy className="pt-1 w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6" />
           ) : (
-            <FaCheck className="pt-1 w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
+            <FaCheck className="pt-1 w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6" />
           )}
         </button>
       </span>
@@ -130,7 +130,7 @@ export default function Lobby() {
           <Loading />
         </div>
       ) : (
-        <ul className="w-3/4 py-8 px-16 divide-y divide-gray-200">
+        <ul className="w-3/4 overflow-y-auto max-h-1/2 py-4 px-8 divide-y divide-gray-200">
           {participants.map((participant: any, index: number) => (
             <li key={index} className="py-3 sm:pt-4">
               <div className="flex items-center space-x-4 rtl:space-x-reverse">
