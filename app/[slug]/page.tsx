@@ -42,9 +42,9 @@ export default function Lobby() {
         body: JSON.stringify({ game_id }),
       });
       const { data } = await response.json();
-      for(let player of data) {
+      for (let player of data) {
         if (player.player_id === player_id && player.isHost === true) {
-          setShowButton(true)
+          setShowButton(true);
         }
       }
       const updatedParticipants = data.map(
@@ -108,22 +108,23 @@ export default function Lobby() {
 
   return (
     <div className="h-screen w-full flex justify-center items-center flex-col">
-      <span className="text-left mb-4 text-4xl font-extrabold dark:text-white">
+      <span className="text-left mb-4 text-2xl sm:text-3xl md:text-4xl font-extrabold dark:text-white">
         Copy Lobby Code:
         <button
-          className="p-4"
+          className="p-2 sm:p-3 md:p-4"
           onClick={() => {
             navigator.clipboard.writeText(game_id);
             setCheck(false);
           }}
         >
           {check ? (
-            <FaRegCopy className="pt-1 w-8 h-8" />
+            <FaRegCopy className="pt-1 w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
           ) : (
-            <FaCheck className="pt-1 w-8 h-8" />
+            <FaCheck className="pt-1 w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
           )}
         </button>
       </span>
+
       {isLoading ? (
         <div>
           <Loading />
@@ -156,7 +157,7 @@ export default function Lobby() {
       {showButton ? (
         <button
           onClick={handleOnClick}
-          className="w-7/12 m-4 text-white bg-custom-light-green hover:bg-hover-green focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm text-center mx-4 py-2.5"
+          className="w-7/12 m-4 text-white bg-custom-light-green hover:bg-hover-green font-medium rounded-lg text-sm text-center mx-4 py-2.5"
         >
           Start Game
         </button>
