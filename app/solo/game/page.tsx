@@ -21,6 +21,7 @@ export default function Game() {
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [endTime, setEndTime] = useState<Date>(new Date());
   const limit_value = searchParams.get('questions');
+  const difficulty = searchParams.get('difficulty');
 
   useEffect(() => {
     setStartTime(new Date());
@@ -36,7 +37,7 @@ export default function Game() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ game_id, limit_value }),
+          body: JSON.stringify({ game_id, limit_value, difficulty }),
         });
         if (!response.ok) {
           throw new Error("Failed to fetch questions");
@@ -127,6 +128,17 @@ export default function Game() {
             </tbody>
           </table>
         </div>
+        {questions &&
+          questionNumber > 0 &&
+          questionNumber <= questions.length && (
+            <h1 className="py-4">
+              Correct Answer: {
+                questions[questionNumber - 2][
+                  `option_${questions[questionNumber - 2].answer_index}`
+                ]
+              }
+            </h1>
+          )}
       </main>
     );
   } else {
