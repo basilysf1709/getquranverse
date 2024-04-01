@@ -107,7 +107,7 @@ export default function Lobby() {
   }, [supabase]);
 
   return (
-    <div className="h-screen w-full flex justify-center items-center flex-col">
+    <div className="h-svh w-full flex justify-center items-center flex-col">
       <span className="text-left mb-4 text-xl sm:text-2xl md:text-3xl font-extrabold dark:text-white">
         Copy Lobby Code:
         <button
