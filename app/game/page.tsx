@@ -220,17 +220,17 @@ export default function Game() {
             </tbody>
           </table>
         </div>
-        {/* {questions &&
+        {questions &&
           questionNumber > 0 &&
           questionNumber <= questions.length && (
-            <h1>
-              {
-                questions[questionNumber - 1][
-                  `option_${questions[questionNumber - 1].answer_index}`
+            <h1 className="py-4">
+              Correct Answer: {
+                questions[questionNumber - 2][
+                  `option_${questions[questionNumber - 2].answer_index}`
                 ]
               }
             </h1>
-          )}{" "} */}
+          )}
       </main>
     );
   } else {
